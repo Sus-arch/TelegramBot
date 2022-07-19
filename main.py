@@ -6,6 +6,8 @@ from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher import FSMContext
 from states.voice_func import GetVoice
+from states.translate_func import Translate
+from utils import tranlate
 import os
 
 import keyboards
@@ -63,6 +65,43 @@ async def send_cat(message: types.Message):
 async def start_get_voice(message: types.Message):
     await GetVoice.S1.set()
     await message.reply("Отправьте голосовое сообщение и я сделаю из него mp3-файл")
+
+
+@dp.message_handler(commands=['translate'])
+async def start_translate(message: types.Message):
+    await Translate.start_lang.set()
+    await message.reply("Выберите начальный язык", reply_markup=keyboards.lang_keyboard)
+
+
+@dp.message_handler(state=Translate.start_lang)
+async def get_start_lang(message: types.Message, state: FSMContext):
+    if message.text not in keyboards.LANG:
+        await message.reply("Данный язык не предусмотрен", reply_markup=keyboards.lang_keyboard)
+        return
+    async with state.proxy() as data:
+        data['s_lang'] = message.text
+
+    await Translate.next()
+    await message.reply("Выберите язык перевода", reply_markup=keyboards.lang_keyboard)
+
+
+@dp.message_handler(state=Translate.end_lang)
+async def get_end_lang(message: types.Message, state: FSMContext):
+    if message.text not in keyboards.LANG:
+        await message.reply("Данный язык не предусмотрен", reply_markup=keyboards.lang_keyboard)
+        return
+    async with state.proxy() as data:
+        data['end_lang'] = message.text
+    await Translate.next()
+    await message.reply("Введите ваше слово")
+
+
+@dp.message_handler(state=Translate.word)
+async def get_word(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        translate_word = tranlate.translate(message.text, data['s_lang'], data['end_lang'])
+        await message.reply(translate_word)
+        await state.finish()
 
 
 @dp.message_handler(state='*', commands='cancel')
