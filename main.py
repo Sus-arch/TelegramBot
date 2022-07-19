@@ -8,6 +8,7 @@ from aiogram.dispatcher import FSMContext
 from states.voice_func import GetVoice
 from states.translate_func import Translate
 from utils import tranlate
+import translators as ts
 import os
 
 import keyboards
@@ -61,6 +62,17 @@ async def send_cat(message: types.Message):
     await message.answer(file)
 
 
+@dp.message_handler(state='*', commands='cancel')
+@dp.message_handler(Text(equals='cancel', ignore_case=True), state='*')
+async def cancel_handler(message: types.Message, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state is None:
+        return
+    logging.info('Cancelling state %r', current_state)
+    await state.finish()
+    await message.reply("Отменено", reply_markup=keyboards.main_keyboard)
+
+
 @dp.message_handler(commands=['get_voice'])
 async def start_get_voice(message: types.Message):
     await GetVoice.S1.set()
@@ -100,19 +112,13 @@ async def get_end_lang(message: types.Message, state: FSMContext):
 async def get_word(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         translate_word = tranlate.translate(message.text, data['s_lang'], data['end_lang'])
-        await message.reply(translate_word)
+        if not bool(translate_word):
+            translate_word = ts.google(message.text, from_language=data['s_lang'], to_language=data['end_lang'])
+        if bool(translate_word):
+            await message.reply(translate_word, reply_markup=keyboards.main_keyboard)
+        else:
+            await message.reply("К сожалению данное слово не получилось перевести", reply_markup=keyboards.main_keyboard)
         await state.finish()
-
-
-@dp.message_handler(state='*', commands='cancel')
-@dp.message_handler(Text(equals='cancel', ignore_case=True), state='*')
-async def cancel_handler(message: types.Message, state: FSMContext):
-    current_state = await state.get_state()
-    if current_state is None:
-        return
-    logging.info('Cancelling state %r', current_state)
-    await state.finish()
-    await message.reply("Отменено", reply_markup=keyboards.main_keyboard)
 
 
 @dp.message_handler(state=GetVoice.S1, content_types=[types.ContentType.VOICE])
