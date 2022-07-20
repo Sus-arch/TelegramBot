@@ -7,7 +7,8 @@ from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher import FSMContext
 from states.voice_func import GetVoice
 from states.translate_func import Translate
-from utils import tranlate
+from states.definieren_func import Definition
+from utils import tranlate, get_definition
 import translators as ts
 import os
 
@@ -83,6 +84,29 @@ async def start_get_voice(message: types.Message):
 async def start_translate(message: types.Message):
     await Translate.start_lang.set()
     await message.reply("Выберите начальный язык", reply_markup=keyboards.lang_keyboard)
+
+
+@dp.message_handler(commands=['definieren'])
+async def start_defination(message: types.Message):
+    await Definition.get_word.set()
+    await message.reply("Отправьте слово на немецком языке, а я подскажу его значение")
+
+
+@dp.message_handler(state=Definition.get_word)
+async def get_word(message: types.Message, state: FSMContext):
+    items = get_definition.definieren(message.text)
+    if bool(items):
+        text = ''
+        if type(items) == list:
+            for i, item in enumerate(items):
+                text += f"{i + 1}. {item} \n"
+        elif type(items) == str:
+            text = items
+        await state.finish()
+        await message.reply(text, reply_markup=keyboards.main_keyboard)
+    else:
+        await state.finish()
+        await message.reply("К сожалению я не могу назвать значение этого слова", reply_markup=keyboards.main_keyboard)
 
 
 @dp.message_handler(state=Translate.start_lang)
