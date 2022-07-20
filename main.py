@@ -113,7 +113,10 @@ async def get_word(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         translate_word = tranlate.translate(message.text, data['s_lang'], data['end_lang'])
         if not bool(translate_word):
-            translate_word = ts.google(message.text, from_language=data['s_lang'], to_language=data['end_lang'])
+            try:
+                translate_word = ts.google(message.text, from_language=data['s_lang'], to_language=data['end_lang'])
+            except:
+                pass
         if bool(translate_word):
             await message.reply(translate_word, reply_markup=keyboards.main_keyboard)
         else:

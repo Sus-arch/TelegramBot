@@ -44,4 +44,3 @@ def translate(text, s_lang, end_lang):
             return get_content(response)
     return None
 
-
