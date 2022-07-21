@@ -99,9 +99,9 @@ async def get_word(message: types.Message, state: FSMContext):
         text = ''
         if type(items) == list:
             for i, item in enumerate(items):
-                text += f"{i + 1}. {item} \n"
+                text += f"{i + 1}. {item.strip()} \n"
         elif type(items) == str:
-            text = items
+            text = items.strip()
         await state.finish()
         await message.reply(text, reply_markup=keyboards.main_keyboard)
     else:
