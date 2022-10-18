@@ -8,9 +8,13 @@ from aiogram.dispatcher import FSMContext
 from states.voice_func import GetVoice
 from states.translate_func import Translate
 from states.definieren_func import Definition
+from states.yes_or_now_func import YesOrNo
+from states.percent_func import Percent
 from utils import tranlate, get_definition
 import translators as ts
 import os
+from random import randint, choice
+
 
 import keyboards
 from config import TOKEN
@@ -78,6 +82,30 @@ async def cancel_handler(message: types.Message, state: FSMContext):
 async def start_get_voice(message: types.Message):
     await GetVoice.S1.set()
     await message.reply("Отправьте голосовое сообщение и я сделаю из него mp3-файл")
+
+
+@dp.message_handler(commands=['yes_or_no'])
+async def start_yes_or_now(message: types.Message):
+    await YesOrNo.get_sentence.set()
+    await message.reply("Отправьте предложение и я скажу, правда это или нет")
+
+
+@dp.message_handler(state=YesOrNo.get_sentence)
+async def ret_yes_or_now(message: types.Message, state: FSMContext):
+    await message.reply(choice(["Да", "Нет"]))
+    await state.finish()
+
+
+@dp.message_handler(commands=['get_percent'])
+async def start_get_percent(message: types.Message):
+    await Percent.get_sentence.set()
+    await message.reply("Отправьте предложение и я скажу, на сколько процентов это правда")
+
+
+@dp.message_handler(state=Percent.get_sentence)
+async def get_percent(message: types.Message, state: FSMContext):
+    await message.reply(f"{randint(0, 100)}%")
+    await state.finish()
 
 
 @dp.message_handler(commands=['translate'])
