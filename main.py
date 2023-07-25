@@ -217,11 +217,11 @@ async def periodical_task(time):
                     s_kupe = int(ticket["kupe"]["count"])
                 message += f'Ссылка - {ticket["link"]} \n'
                 message += '-' * 40 + '\n'
-            if s_plac >= 2 or s_kupe >= 2:
+            if s_plac >= 1 or s_kupe >= 1:
                 await bot.send_message("609673774", message)
 
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    loop.create_task(periodical_task(600))
+    loop.create_task(periodical_task(30))
     executor.start_polling(dp, skip_updates=True, on_shutdown=shutdown)
