@@ -200,7 +200,7 @@ async def echo(message: types.Message):
 
 
 async def periodical_task(time):
-    await bot.send_message("609673774", str(parseRZD.parse_tickest()))
+    await bot.send_message("609673774", '123')
     # while True:
     #     await asyncio.sleep(time)
     #     data = parseRZD.parse_tickest()
