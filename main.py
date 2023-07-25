@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from pathlib import Path
 from aiogram import Bot, Dispatcher, executor, types
@@ -10,7 +11,7 @@ from states.translate_func import Translate
 from states.definieren_func import Definition
 from states.yes_or_now_func import YesOrNo
 from states.percent_func import Percent
-from utils import tranlate, get_definition
+from utils import tranlate, get_definition, parseRZD
 import translators as ts
 import os
 from random import randint, choice
@@ -198,5 +199,29 @@ async def echo(message: types.Message):
     await message.answer(message.text)
 
 
+async def periodical_task(time):
+    while True:
+        await asyncio.sleep(time)
+        data = parseRZD.parse_tickest()
+        if bool(data):
+            message = 'НАЙДЕН БИЛЕТ \n'
+            s_plac = 0
+            s_kupe = 0
+            for num, ticket in enumerate(data):
+                message += f'{num + 1}. Время - {ticket["time"]} \n'
+                if ticket["plac"]["count"] != 0:
+                    message += f'Плацкарт ({ticket["plac"]["count"]} шт.) - {ticket["plac"]["price"]} \n'
+                    s_plac = int(ticket["plac"]["count"])
+                if ticket["kupe"]["count"] != 0:
+                    message += f'Купе ({ticket["kupe"]["count"]} шт.) - {ticket["kupe"]["price"]} \n'
+                    s_kupe = int(ticket["kupe"]["count"])
+                message += f'Ссылка - {ticket["link"]} \n'
+                message += '-' * 40 + '\n'
+            if s_plac >= 2 or s_kupe >= 2:
+                await bot.send_message("609673774", message)
+
+
 if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.create_task(periodical_task(600))
     executor.start_polling(dp, skip_updates=True, on_shutdown=shutdown)
