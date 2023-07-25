@@ -200,25 +200,26 @@ async def echo(message: types.Message):
 
 
 async def periodical_task(time):
-    while True:
-        await asyncio.sleep(time)
-        data = parseRZD.parse_tickest()
-        if bool(data):
-            message = 'НАЙДЕН БИЛЕТ \n'
-            s_plac = 0
-            s_kupe = 0
-            for num, ticket in enumerate(data):
-                message += f'{num + 1}. Время - {ticket["time"]} \n'
-                if ticket["plac"]["count"] != 0:
-                    message += f'Плацкарт ({ticket["plac"]["count"]} шт.) - {ticket["plac"]["price"]} \n'
-                    s_plac = max(int(ticket["plac"]["count"]), s_plac)
-                if ticket["kupe"]["count"] != 0:
-                    message += f'Купе ({ticket["kupe"]["count"]} шт.) - {ticket["kupe"]["price"]} \n'
-                    s_kupe = max(int(ticket["kupe"]["count"]), s_kupe)
-                message += f'Ссылка - {ticket["link"]} \n'
-                message += '-' * 40 + '\n'
-            # if s_plac >= 1 or s_kupe >= 1:
-                await bot.send_message("609673774", message)
+    await bot.send_message("609673774", str(parseRZD.parse_tickest()))
+    # while True:
+    #     await asyncio.sleep(time)
+    #     data = parseRZD.parse_tickest()
+    #     if bool(data):
+    #         message = 'НАЙДЕН БИЛЕТ \n'
+    #         s_plac = 0
+    #         s_kupe = 0
+    #         for num, ticket in enumerate(data):
+    #             message += f'{num + 1}. Время - {ticket["time"]} \n'
+    #             if ticket["plac"]["count"] != 0:
+    #                 message += f'Плацкарт ({ticket["plac"]["count"]} шт.) - {ticket["plac"]["price"]} \n'
+    #                 s_plac = max(int(ticket["plac"]["count"]), s_plac)
+    #             if ticket["kupe"]["count"] != 0:
+    #                 message += f'Купе ({ticket["kupe"]["count"]} шт.) - {ticket["kupe"]["price"]} \n'
+    #                 s_kupe = max(int(ticket["kupe"]["count"]), s_kupe)
+    #             message += f'Ссылка - {ticket["link"]} \n'
+    #             message += '-' * 40 + '\n'
+    #         # if s_plac >= 1 or s_kupe >= 1:
+    #             await bot.send_message("609673774", message)
 
 
 if __name__ == '__main__':
