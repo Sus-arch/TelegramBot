@@ -224,5 +224,5 @@ async def periodical_task(time):
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    loop.create_task(periodical_task(30))
+    loop.create_task(periodical_task(10))
     executor.start_polling(dp, skip_updates=True, on_shutdown=shutdown)
