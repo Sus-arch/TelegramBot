@@ -11,7 +11,7 @@ def get_source_html(url):
     options = webdriver.ChromeOptions()
     options.add_argument("headless")
     driver = webdriver.Chrome(options=options)
-    driver.maximize_window()
+    driver.get("http://www.python.org")
 
     try:
         driver.get(url=url)
