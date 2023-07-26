@@ -200,8 +200,7 @@ async def echo(message: types.Message):
 
 
 async def periodical_task(time):
-    try:
-        # while True:
+    while True:
         await asyncio.sleep(time)
         data = parseRZD.parse_tickest()
         if bool(data):
@@ -218,12 +217,11 @@ async def periodical_task(time):
                     s_kupe = max(int(ticket["kupe"]["count"]), s_kupe)
                 message += f'Ссылка - {ticket["link"]} \n'
                 message += '-' * 40 + '\n'
-                await bot.send_message("609673774", message)
-    except Exception as ex:
-        await bot.send_message("609673774", str(ex))
+                if s_plac >= 2 or s_kupe >= 2:
+                    await bot.send_message("609673774", message)
 
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    loop.create_task(periodical_task(5))
+    loop.create_task(periodical_task(600))
     executor.start_polling(dp, skip_updates=True, on_shutdown=shutdown)

@@ -11,7 +11,6 @@ def get_source_html(url):
     options = webdriver.ChromeOptions()
     options.add_argument("headless")
     driver = webdriver.Chrome(options=options)
-    driver.get("http://www.python.org")
 
     try:
         driver.get(url=url)
@@ -53,7 +52,7 @@ def get_source_html(url):
         return data
 
     except Exception as _ex:
-        return _ex
+        return None
     finally:
         driver.close()
         driver.quit()
