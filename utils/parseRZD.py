@@ -53,7 +53,7 @@ def get_source_html(url):
         return data
 
     except Exception as _ex:
-        return None
+        return _ex
     finally:
         driver.close()
         driver.quit()
