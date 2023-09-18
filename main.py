@@ -1,26 +1,25 @@
 import asyncio
 import logging
+import os
 from pathlib import Path
+from random import choice, randint
+
+import translators as ts
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
-from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher import FSMContext
-from states.voice_func import GetVoice
-from states.translate_func import Translate
-from states.definieren_func import Definition
-from states.yes_or_now_func import YesOrNo
-from states.percent_func import Percent
-from utils import tranlate, get_definition, parseRZD
-import translators as ts
-import os
-from random import randint, choice
-
+from aiogram.dispatcher.filters import Text
+from requests import get
 
 import keyboards
 from config import TOKEN
-from requests import get
-
+from states.definieren_func import Definition
+from states.percent_func import Percent
+from states.translate_func import Translate
+from states.voice_func import GetVoice
+from states.yes_or_now_func import YesOrNo
+from utils import get_definition, parseRZD, tranlate
 
 logging.basicConfig(level=logging.INFO)
 
@@ -169,7 +168,7 @@ async def get_word(message: types.Message, state: FSMContext):
             try:
                 translate_word = ts.google(message.text, from_language=data['s_lang'], to_language=data['end_lang'])
             except:
-                pass
+                translate_word = ''
         if bool(translate_word):
             await message.reply(translate_word, reply_markup=keyboards.main_keyboard)
         else:

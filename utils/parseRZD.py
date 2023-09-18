@@ -1,7 +1,7 @@
-from bs4 import BeautifulSoup
-from selenium import webdriver
 import time
 
+from bs4 import BeautifulSoup
+from selenium import webdriver
 
 LINK_FRIST = 'https://ticket.rzd.ru/searchresults/v/1/5a3244bc340c7441a0a556ca/5a13baf9340c745ca1e80436/2023-08-03'
 LINK_SECOND = 'https://ticket.rzd.ru/searchresults/v/1/5a3244bc340c7441a0a556ca/5a13baf9340c745ca1e80436/2023-08-04'

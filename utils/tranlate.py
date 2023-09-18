@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 
-
 LANGUAGES = {
     'en': 'english',
     'ru': 'russian',
@@ -43,4 +42,3 @@ def translate(text, s_lang, end_lang):
         if response:
             return get_content(response)
     return None
-

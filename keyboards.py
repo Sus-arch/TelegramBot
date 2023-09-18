@@ -1,5 +1,4 @@
-from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
-
+from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
 LANG = ['en', 'ru', 'ar', 'de', 'sp', 'fr', 'he', 'it', 'jp', 'du', 'po', 'pt', 'ro', 'se', 'tr', 'ua', 'ch']
 button1 = KeyboardButton('/show_dog')
