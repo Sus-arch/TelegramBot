@@ -2,15 +2,17 @@ import time
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 
 LINK_FRIST = 'https://ticket.rzd.ru/searchresults/v/1/5a3244bc340c7441a0a556ca/5a8abfcb340c74257bd366d5/2023-12-29'
 LINK_SECOND = 'https://ticket.rzd.ru/searchresults/v/1/5a3244bc340c7441a0a556ca/5a8abfcb340c74257bd366d5/2023-12-30'
 
 
 def get_source_html(url):
+    service = Service()
     options = webdriver.ChromeOptions()
     options.add_argument("headless")
-    driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome(service=service, options=options)
 
     try:
         driver.get(url=url)
@@ -71,3 +73,6 @@ def parse_tickest():
         data.append(second_data)
 
     return data
+
+
+print(parse_tickest())

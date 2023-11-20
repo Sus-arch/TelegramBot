@@ -216,7 +216,8 @@ async def periodical_task(time):
                     s_kupe = max(int(ticket["kupe"]["count"]), s_kupe)
                 message += f'Ссылка - {ticket["link"]} \n'
                 message += '-' * 40 + '\n'
-                if s_plac >= 2 or s_kupe >= 2:
+                print(message)
+                if s_plac >= 1 or s_kupe >= 1:
                     await bot.send_message("609673774", message)
 
 
