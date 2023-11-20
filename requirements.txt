@@ -9,4 +9,5 @@ attrs==21.4.0
 yarl==1.7.2
 beautifulsoup4==4.11.1
 translators==5.3.1
+selenium==4.10.0
 lxml==4.9.3
